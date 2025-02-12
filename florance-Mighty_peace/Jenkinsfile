@@ -1,0 +1,55 @@
+pipeline {
+    agent any
+
+    environment {
+        NODEJS_VERSION = '18'  // Set your Node.js version
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', 
+                url: 'https://github.com/Sivaram0/kubes.git' 
+            }
+        }
+
+        stage('Clean Workspace') {
+            steps {
+                deleteDir()  // Removes all files in the workspace
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    def nodeExists = sh(script: "which node", returnStatus: true)
+                    if (nodeExists != 0) {
+                        error "Node.js is not installed. Install Node.js to proceed."
+                    }
+                }
+                sh 'npm install'  // Install Angular dependencies
+            }
+        }
+
+        stage('Build Angular App') {
+            steps {
+                sh 'ng build --prod'  // Build the Angular project
+            }
+        }
+
+        stage('Archive Artifacts') {
+            steps {
+                archiveArtifacts artifacts: 'dist/**/*', fingerprint: true
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build and archive successful!'
+        }
+        failure {
+            echo 'Build failed. Check logs for details.'
+        }
+    }
+}
