@@ -1,0 +1,15 @@
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-decoration: none;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+    margin: 5px;
+    text-align: center;
+}
+/* Change button color when hovered */
+.btn:hover {
+    background-color: #45a049;
+}
